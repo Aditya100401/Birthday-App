@@ -1,4 +1,4 @@
-import React, { useState, useCallback, useRef } from 'react';
+import React, { useState, useCallback, useRef, useEffect } from 'react';
 import JigsawPuzzleComponent from './JigsawPuzzle';
 import './App.css';
 
@@ -6,10 +6,10 @@ function App() {
   const [isPuzzleSolved, setIsPuzzleSolved] = useState(false);
   const [showGiftContent, setShowGiftContent] = useState(false);
   const [isMusicPlaying, setIsMusicPlaying] = useState(false);
+  const [frontImage, setFrontImage] = useState('picture-1');
   const audioRef = useRef(null);
 
   const handlePuzzleComplete = useCallback(() => {
-    console.log("Puzzle completed callback triggered");
     setIsPuzzleSolved(true);
   }, []);
 
@@ -32,6 +32,17 @@ function App() {
       setIsMusicPlaying(!isMusicPlaying);
     }
   };
+
+  const swapImages = useCallback(() => {
+    setFrontImage(prev => prev === 'picture-1' ? 'picture-2' : 'picture-1');
+  }, []);
+
+  // Use effect to handle puzzle completion
+  useEffect(() => {
+    if (isPuzzleSolved) {
+      console.log("Puzzle is solved!");
+    }
+  }, [isPuzzleSolved]);
 
   return (
     <div className="app-container">
@@ -72,16 +83,27 @@ function App() {
           </div>
         )}
 
+
         {showGiftContent && (
-          <div className="gift-content active">
-            <h1>Happy Birthday Sunflower!! 🌻</h1>
-            <div className="images-container">
-              <img
-                src={process.env.PUBLIC_URL + '/assets/picture-1.jpeg'}
-                alt="Birthday celebration"
-              />
-            </div>
+                <div className="gift-content active">
+                  <h1>Happy Birthday Sunflower!! 🌻 </h1>
+                  <h2>I love you so much and I hope you have a great day and you're 23 hehe old</h2>
+                  <p>Click on the picture to see the next one</p>
+                  <div className="images-container">
+                  <img
+                    src={process.env.PUBLIC_URL + '/assets/picture-1.jpeg'}
+                    alt="Birthday celebration 1"
+                    className={`photo-card ${frontImage === 'picture-1' ? 'front' : 'back'}`}
+                    onClick={swapImages}
+                  />
+                  <img
+                    src={process.env.PUBLIC_URL + '/assets/picture-2.jpeg'}
+                    alt="Birthday celebration 2"
+                    className={`photo-card ${frontImage === 'picture-2' ? 'front' : 'back'}`}
+                    onClick={swapImages}
+            />
           </div>
+        </div>
         )}
       </div>
     </div>
